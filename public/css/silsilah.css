@@ -1,0 +1,14 @@
+.app-brand{
+    background-color: rgba(119, 136, 153, 0.5);
+}
+.app-table-header{
+    background-color: #888888;
+    color: #000022;
+    text-align: center;
+}
+
+.bg-gray{
+    background-color: lightgray;
+    font-size: 10pt;
+    font-style: italic;
+}

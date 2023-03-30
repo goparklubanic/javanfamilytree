@@ -1,0 +1,64 @@
+-- Challenge ke-1
+-- Rancangan table database
+
+CREATE DATABASE IF NOT EXISTS silsilah;
+CREATE USER IF NOT EXISTS javan@localhost IDENTIFIED BY '73chnic@l7est';
+
+GRANT ALL PRIVILEGES ON silsilah.* TO javan@localhost WITH GRANT OPTION;
+
+USE silsilah;
+CREATE TABLE keluarga(
+    id int(4) NOT NULL AUTO_INCREMENT,
+    parentId int(4) NOT NULL,
+    generasiKe int(2) NOT NULL,
+    urutKe int(2) NOT NULL DEFAULT 1,
+    nama varchar(50) NOT NULL,
+    jnKelamin enum('Laki-laki','Perempuan') DEFAULT 'Laki-laki',
+    PRIMARY KEY(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;
+
+-- Challenge ke-2
+-- Input data
+
+INSERT INTO keluarga VALUES
+(1,0,0,0,'Budi','Laki-laki'),
+(2,1,1,1,'Dedi','Laki-laki'),
+(3,1,1,2,'Dodi','Laki-laki'),
+(4,1,1,3,'Dede','Laki-laki'),
+(5,1,1,4,'Dewi','Perempuan'),
+(6,2,2,1,'Feri','Laki-laki'),
+(7,2,2,2,'Farah','Perempuan'),
+(8,3,2,1,'Gugus','Laki-laki'),
+(9,3,2,2,'Gandi','Laki-laki'),
+(10,4,2,1,'Hani','Perempuan'),
+(11,4,2,2,'Hana','Perempuan');
+
+-- Challenge ke-3
+-- Query untuk mendapatkan semua anak Budi
+SELECT * FROM keluarga WHERE parentId = (SELECT id FROM keluarga WHERE nama='Budi');
+
+-- Challenge ke-4
+-- Query untuk untuk mendapatkan cucu dari budi
+SELECT * FROM keluarga WHERE generasiKe = (SELECT (generasiKe  + 2) FROM keluarga WHERE nama='Budi');
+
+-- Challenge ke-5
+-- Query untuk untuk mendapatkan cucu perempuan dari budi
+SELECT * FROM keluarga WHERE 
+generasiKe = (SELECT (generasiKe + 2) FROM keluarga WHERE nama='Budi') && 
+jnKelamin ='Perempuan';
+
+-- Challenge ke-6
+-- Query untuk untuk mendapatkan bibi dari Farah
+SELECT * FROM keluarga WHERE 
+generasiKe = (SELECT generasiKe -1 FROM keluarga WHERE nama='Farah') && 
+id != (SELECT parentId  FROM keluarga WHERE nama='Farah') && 
+urutKe > (SELECT urutKe FROM keluarga WHERE id=(SELECT parentId FROM keluarga WHERE nama ='Farah')) && 
+jnKelamin  = 'Perempuan';
+
+-- Challenge ke-7
+-- Query untuk untuk mendapatkan sepupu laki-laki dari Hani
+SELECT * FROM keluarga WHERE
+generasiKe = (SELECT generasiKe FROM keluarga WHERE nama='Hani') &&
+parentId != (SELECT parentId FROM keluarga WHERE nama='Hani') &&
+jnKelamin = 'Laki-laki';
+
